@@ -62,10 +62,10 @@ struct XPlanetRunner {
         var w = 2560
         var h = 1440
         if Thread.isMainThread {
-            let screen = NSScreen.main ?? NSScreen.screens[0]
-            let scale = screen.backingScaleFactor
-            w = Int(screen.frame.width * scale)
-            h = Int(screen.frame.height * scale)
+            let screen = NSScreen.main ?? NSScreen.screens.first
+            let scale = screen?.backingScaleFactor ?? 2.0
+            w = Int((screen?.frame.width ?? 1280) * scale)
+            h = Int((screen?.frame.height ?? 800) * scale)
         } else {
             DispatchQueue.main.sync {
                 let screen = NSScreen.main ?? NSScreen.screens[0]

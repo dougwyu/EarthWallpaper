@@ -37,6 +37,7 @@ class WallpaperUpdater: ObservableObject {
     }
 
     private func performUpdate() {
+        guard !isUpdating else { return }
         let cities = currentCities
         isUpdating = true
         lastError = nil
