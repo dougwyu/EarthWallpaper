@@ -101,6 +101,11 @@ struct MenuView: View {
                 .padding(.bottom, 6)
         }
         .frame(minWidth: 240)
+        // The menu's content view only receives timer ticks while it is open, and
+        // SwiftUI keeps its `tick` state across open/close — so without this the
+        // dropdown shows whatever time it held when first built. Refresh on every
+        // appearance, and keep ticking each second while the menu stays open.
+        .onAppear { tick = Date() }
         .onReceive(clockTimer) { tick = $0 }
     }
 }
