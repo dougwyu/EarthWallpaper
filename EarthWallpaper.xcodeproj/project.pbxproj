@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A9C4959E36DF2FBE42D7CAEE /* CoreLocation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */; };
 		C7CD535F0C308C45D06C46DF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -21,24 +21,11 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		0862CE9D4DB0395B2F103D6C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				A9C4959E36DF2FBE42D7CAEE /* CoreLocation.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		4935F0EA9908EC64F184B2CF /* EarthWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarthWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreLocation.framework; sourceTree = "<group>"; };
 		728AD6F49A5CA9475436097B /* EarthWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperTests.swift; sourceTree = "<group>"; };
 		8F37A04575A6B4DBE15F1FC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,6 +52,7 @@
 		7D42F66D0D3EF521CD60736C /* EarthWallpaperTests */ = {
 			isa = PBXGroup;
 			children = (
+				8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */,
 			);
 			path = EarthWallpaperTests;
 			sourceTree = "<group>";
@@ -105,7 +93,6 @@
 			buildPhases = (
 				D48217E409C86743744873CF /* Sources */,
 				00A58F9B5C9302289EF89205 /* Frameworks */,
-				0862CE9D4DB0395B2F103D6C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -176,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

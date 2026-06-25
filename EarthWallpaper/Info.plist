@@ -14,5 +14,9 @@
     <string>1.0</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>CFBundleExecutable</key>
+    <string>EarthWallpaper</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
 </dict>
 </plist>

@@ -25,6 +25,7 @@ targets:
         ENABLE_APP_SANDBOX: NO
     dependencies:
       - framework: CoreLocation.framework
+        embed: false
 
   EarthWallpaperTests:
     type: bundle.unit-test
