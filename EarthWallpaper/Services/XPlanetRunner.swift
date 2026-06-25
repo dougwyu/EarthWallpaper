@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 enum XPlanetError: LocalizedError {
@@ -44,5 +45,57 @@ struct XPlanetRunner {
         try content.write(to: url, atomically: true, encoding: .utf8)
     }
 
-    // MARK: - Run (added in Task 6)
+    // MARK: - Run
+
+    static func run(cities: [City]) throws {
+        guard let binaryPath = xplanetPath() else {
+            throw XPlanetError.binaryNotFound
+        }
+
+        let dir = try supportDir()
+        let outputURL = dir.appendingPathComponent("earth.png")
+        let markersURL = dir.appendingPathComponent("markers.txt")
+
+        try writeMarkers(cities: cities, to: markersURL)
+
+        let screen = NSScreen.main ?? NSScreen.screens[0]
+        let scale = screen.backingScaleFactor
+        let w = Int(screen.frame.width * scale)
+        let h = Int(screen.frame.height * scale)
+
+        var args = [
+            "-num_times", "1",
+            "-body", "earth",
+            "-projection", "rectangular",
+            "-geometry", "\(w)x\(h)",
+            "-output", outputURL.path
+        ]
+        if !cities.isEmpty {
+            args += ["-markerfile", markersURL.path]
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: binaryPath)
+        process.arguments = args
+
+        let errorPipe = Pipe()
+        process.standardError = errorPipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        if process.terminationStatus != 0 {
+            let data = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            let msg = String(data: data, encoding: .utf8) ?? "exit code \(process.terminationStatus)"
+            throw XPlanetError.processFailed(msg)
+        }
+
+        setWallpaper(imageURL: outputURL)
+    }
+
+    static func setWallpaper(imageURL: URL) {
+        for screen in NSScreen.screens {
+            try? NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
+        }
+    }
 }
