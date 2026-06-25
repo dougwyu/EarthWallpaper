@@ -108,33 +108,11 @@ struct XPlanetRunner {
             throw XPlanetError.processFailed("Cannot render annotated image")
         }
 
-        // Double-buffer between two stable files (A / B), alternating each render.
-        //
-        // Two macOS constraints pull in opposite directions:
-        //  1. setDesktopImageURL with the SAME path that's already set is a no-op
-        //     — overwriting one fixed file leaves the stale image on screen.
-        //  2. On macOS 14+ the new wallpaper system keeps a live reference to the
-        //     file; DELETING it (as a unique-filename scheme must, to avoid
-        //     unbounded growth) leaves a dangling reference — the desktop shows a
-        //     black "?" placeholder and freezes.
-        //
-        // Alternating between two persistent files satisfies both: the path
-        // changes every update (forces a repaint) and neither file is ever
-        // deleted (no dangling reference). Picking the buffer that is NOT
-        // currently on the desktop means we never overwrite the live file.
+        // Write to a single stable file. The image is displayed by DesktopOverlay
+        // (a desktop-level window), which reloads it directly — so we don't fight
+        // the macOS wallpaper system's path caching at all.
         let dir = url.deletingLastPathComponent()
-        let bufferA = dir.appendingPathComponent("wallpaper-a.png")
-        let bufferB = dir.appendingPathComponent("wallpaper-b.png")
-
-        // Alternate strictly via our OWN persisted flag — do NOT ask macOS which
-        // image is current. On macOS 14+, NSWorkspace.desktopImageURL does not
-        // reliably return the file we set, so deciding the buffer from it makes
-        // us pick the same buffer every time, overwrite one fixed path, and hit
-        // the same-path repaint no-op (the desktop freezes on the first render).
-        let key = "com.earthwallpaper.lastBuffer"
-        let useA = UserDefaults.standard.string(forKey: key) != "a"
-        let outURL = useA ? bufferA : bufferB
-
+        let outURL = dir.appendingPathComponent("overlay.png")
         guard let dest = CGImageDestinationCreateWithURL(
             outURL as CFURL, UTType.png.identifier as CFString, 1, nil) else {
             throw XPlanetError.processFailed("Cannot create image destination")
@@ -143,7 +121,6 @@ struct XPlanetRunner {
         guard CGImageDestinationFinalize(dest) else {
             throw XPlanetError.processFailed("Cannot write annotated image")
         }
-        UserDefaults.standard.set(useA ? "a" : "b", forKey: key)
         return outURL
     }
 
@@ -171,7 +148,10 @@ struct XPlanetRunner {
 
     // MARK: - Run
 
-    static func run(cities: [City]) throws {
+    /// Renders the Earth map with city labels and returns the file URL of the
+    /// resulting image. Displaying it is the caller's job (see DesktopOverlay).
+    @discardableResult
+    static func run(cities: [City]) throws -> URL {
         guard let binaryPath = xplanetPath() else {
             throw XPlanetError.binaryNotFound
         }
@@ -215,41 +195,6 @@ struct XPlanetRunner {
             throw XPlanetError.processFailed(msg)
         }
 
-        let finalURL = try annotateImage(at: outputURL, with: cities)
-        setWallpaper(imageURL: finalURL)
-    }
-
-    static func setWallpaper(imageURL: URL) {
-        // On macOS 14+ (and notably macOS 26), NSWorkspace.setDesktopImageURL
-        // updates the stored setting but does NOT force the WindowServer to
-        // redraw — the desktop stays frozen on the previously-painted image even
-        // as the underlying file changes. Driving it through System Events
-        // (AppleScript) does trigger an actual repaint. Combined with the
-        // alternating-buffer paths, this reliably refreshes the desktop.
-        //
-        // The first call prompts the user to allow controlling System Events
-        // (see NSAppleEventsUsageDescription in Info.plist); thereafter silent.
-        let escaped = imageURL.path
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-        let source = "tell application \"System Events\" to set picture of every desktop to \"\(escaped)\""
-
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        process.arguments = ["-e", source]
-        let errPipe = Pipe()
-        process.standardError = errPipe
-        do {
-            try process.run()
-            process.waitUntilExit()
-        } catch {
-            // Fall back to the legacy API if osascript can't be launched.
-            let block = {
-                for screen in NSScreen.screens {
-                    try? NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
-                }
-            }
-            if Thread.isMainThread { block() } else { DispatchQueue.main.sync { block() } }
-        }
+        return try annotateImage(at: outputURL, with: cities)
     }
 }

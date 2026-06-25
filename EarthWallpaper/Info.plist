@@ -20,7 +20,5 @@
     <string>APPL</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
-    <key>NSAppleEventsUsageDescription</key>
-    <string>EarthWallpaper updates your desktop picture to the live Earth map. This requires permission to control System Events.</string>
 </dict>
 </plist>

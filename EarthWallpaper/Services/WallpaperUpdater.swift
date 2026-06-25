@@ -43,8 +43,11 @@ class WallpaperUpdater: ObservableObject {
         lastError = nil
         DispatchQueue.global(qos: .utility).async { [weak self] in
             do {
-                try XPlanetRunner.run(cities: cities)
-                DispatchQueue.main.async { self?.isUpdating = false }
+                let imageURL = try XPlanetRunner.run(cities: cities)
+                DispatchQueue.main.async {
+                    DesktopOverlay.shared.show(imageURL: imageURL)
+                    self?.isUpdating = false
+                }
             } catch {
                 DispatchQueue.main.async {
                     self?.isUpdating = false
