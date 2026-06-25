@@ -56,10 +56,25 @@ class WallpaperUpdater: ObservableObject {
 
     private func reschedule() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(intervalMinutes * 60),
-            repeats: true
-        ) { [weak self] _ in self?.performUpdate() }
-        RunLoop.main.add(timer!, forMode: .common)
+        let interval = TimeInterval(intervalMinutes * 60)
+
+        // Align fires to interval boundaries relative to the top of the hour so
+        // the rendered clock matches wall time. Without this, the timer fires at
+        // an arbitrary phase (whenever the app launched / the interval changed),
+        // so the displayed minute can lag the real minute by almost a full
+        // period. The +0.3s offset lets Date() tick into the new minute before
+        // we read it; the image then appears ~1-2s after the boundary (xplanet
+        // render time), keeping the label current for the rest of the period.
+        let now = Date()
+        let secondsIntoPeriod = now.timeIntervalSinceReferenceDate
+            .truncatingRemainder(dividingBy: interval)
+        let firstFire = now.addingTimeInterval(interval - secondsIntoPeriod + 0.3)
+
+        let t = Timer(fire: firstFire, interval: interval, repeats: true) { [weak self] _ in
+            self?.performUpdate()
+        }
+        t.tolerance = 0.2
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 }

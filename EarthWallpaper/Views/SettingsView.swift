@@ -44,7 +44,7 @@ struct SettingsView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(city.name).fontWeight(.medium)
-                                    Text(city.timezone)
+                                    Text(city.country ?? city.timezone)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -88,8 +88,9 @@ struct SettingsView: View {
         Task {
             do {
                 let result = try await geocodeCity(name)
-                let city = City(name: name, latitude: result.latitude,
-                                longitude: result.longitude, timezone: result.timezone)
+                let city = City(name: result.name, latitude: result.latitude,
+                                longitude: result.longitude, timezone: result.timezone,
+                                country: result.country.isEmpty ? nil : result.country)
                 await MainActor.run {
                     cityStore.add(city)
                     cityInput = ""

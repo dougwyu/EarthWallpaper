@@ -3,64 +3,47 @@ import XCTest
 
 final class XPlanetRunnerTests: XCTestCase {
 
-    func test_markerLine_format() {
-        let city = City(name: "Tokyo", latitude: 35.6762, longitude: 139.6503,
-                        timezone: "Asia/Tokyo")
-        // Fixed date: 2024-01-15 12:00:00 UTC → 21:00 in Tokyo (UTC+9)
-        var components = DateComponents()
-        components.year = 2024; components.month = 1; components.day = 15
-        components.hour = 12; components.minute = 0; components.second = 0
-        components.timeZone = TimeZone(identifier: "UTC")
-        let fixedDate = Calendar.current.date(from: components)!
-
-        let line = XPlanetRunner.markerLine(for: city, date: fixedDate)
-
-        XCTAssertTrue(line.hasPrefix("35.6762 139.6503 "))
-        XCTAssertTrue(line.contains("\"Tokyo "))
-        XCTAssertTrue(line.contains("\"Tokyo 21:00\""))
+    // Equirectangular: lon=0, lat=0 → centre of image
+    func test_pixelPosition_equator_primeMeridian() {
+        let size = CGSize(width: 360, height: 180)
+        let pt = XPlanetRunner.pixelPosition(latitude: 0, longitude: 0, size: size)
+        XCTAssertEqual(pt.x, 180, accuracy: 0.5)
+        XCTAssertEqual(pt.y, 90,  accuracy: 0.5)  // CG y=0 at bottom → equator is mid-height
     }
 
-    func test_markerLine_escapesDoubleQuotesInName() {
-        let city = City(name: "San \"Paolo\"", latitude: -23.55, longitude: -46.63,
-                        timezone: "America/Sao_Paulo")
-        var components = DateComponents()
-        components.year = 2024; components.month = 1; components.day = 15
-        components.hour = 12; components.minute = 0; components.second = 0
-        components.timeZone = TimeZone(identifier: "UTC")
-        let fixedDate = Calendar.current.date(from: components)!
-
-        let line = XPlanetRunner.markerLine(for: city, date: fixedDate)
-        XCTAssertFalse(line.contains("\"San \"Paolo\""),
-                       "Unescaped double-quotes in city name break xplanet's marker format")
-        XCTAssertTrue(line.contains("San 'Paolo'"),
-                      "Double-quotes in name should be replaced with apostrophes")
+    // North Pole → top of image (image_y=0 → cg_y = height)
+    func test_pixelPosition_northPole() {
+        let size = CGSize(width: 360, height: 180)
+        let pt = XPlanetRunner.pixelPosition(latitude: 90, longitude: 0, size: size)
+        XCTAssertEqual(pt.x, 180,  accuracy: 0.5)
+        XCTAssertEqual(pt.y, 180,  accuracy: 0.5)  // top of image = cg_y = height
     }
 
-    func test_writeMarkers_createsFile() throws {
-        let tmp = FileManager.default.temporaryDirectory
-            .appendingPathComponent("test_markers_\(UUID().uuidString).txt")
-
-        let cities = [
-            City(name: "London", latitude: 51.5, longitude: -0.1, timezone: "Europe/London"),
-            City(name: "Sydney", latitude: -33.87, longitude: 151.21, timezone: "Australia/Sydney")
-        ]
-        try XPlanetRunner.writeMarkers(cities: cities, to: tmp)
-
-        let content = try String(contentsOf: tmp)
-        XCTAssertTrue(content.contains("51.5"))
-        XCTAssertTrue(content.contains("London"))
-        XCTAssertTrue(content.contains("-33.87"))
-        XCTAssertTrue(content.contains("Sydney"))
-
-        try? FileManager.default.removeItem(at: tmp)
+    // London ~51.5°N, 0°W
+    func test_pixelPosition_london() {
+        let size = CGSize(width: 3600, height: 1800)
+        let pt = XPlanetRunner.pixelPosition(latitude: 51.5, longitude: -0.12, size: size)
+        // x ≈ (180 - 0.12) / 360 * 3600 ≈ 1799
+        XCTAssertEqual(pt.x, 1798.8, accuracy: 1)
+        // image_y = (90 - 51.5) / 180 * 1800 = 385, cg_y = 1800 - 385 = 1415
+        XCTAssertEqual(pt.y, 1415, accuracy: 1)
     }
 
-    func test_writeMarkers_emptyCity_writesEmptyFile() throws {
-        let tmp = FileManager.default.temporaryDirectory
-            .appendingPathComponent("test_empty_\(UUID().uuidString).txt")
-        try XPlanetRunner.writeMarkers(cities: [], to: tmp)
-        let content = try String(contentsOf: tmp)
-        XCTAssertEqual(content, "")
-        try? FileManager.default.removeItem(at: tmp)
+    // Date Line: longitude=180 → right edge
+    func test_pixelPosition_dateLine() {
+        let size = CGSize(width: 360, height: 180)
+        let pt = XPlanetRunner.pixelPosition(latitude: 0, longitude: 180, size: size)
+        XCTAssertEqual(pt.x, 360, accuracy: 0.5)
+    }
+
+    // Map fills the full frame (xplanet stretches it). At a non-2:1 size,
+    // latitude still spans the entire height — no letterbox offset.
+    func test_pixelPosition_fillsFullFrame_nonSquareAspect() {
+        let size = CGSize(width: 3840, height: 2486)   // ratio ≈ 1.54 (real Retina screen)
+        // London 51.5°N, 0°: x = (180/360)*3840 = 1920
+        //   imageY = (90-51.5)/180*2486 = 531.74; cg_y = 2486 - 531.74 = 1954.26
+        let pt = XPlanetRunner.pixelPosition(latitude: 51.5, longitude: 0, size: size)
+        XCTAssertEqual(pt.x, 1920, accuracy: 0.5)
+        XCTAssertEqual(pt.y, 1954.26, accuracy: 1)
     }
 }

@@ -1,4 +1,36 @@
 import SwiftUI
+import AppKit
+
+// Bring the Settings window to the foreground. Because the app is an accessory
+// (LSUIElement = true), opening Settings does NOT activate the app, so the
+// window appears behind other apps' windows. We must activate explicitly and
+// order the window front. Called twice — once now, once after a short delay —
+// because the window may not exist yet on the first call.
+func bringSettingsWindowToFront() {
+    func front() {
+        NSApp.activate(ignoringOtherApps: true)
+        let settings = NSApp.windows.first {
+            $0.identifier?.rawValue == "com_apple_SwiftUI_Settings_window"
+        } ?? NSApp.windows.first {
+            $0.isVisible && $0.canBecomeMain && $0.styleMask.contains(.titled)
+        }
+        settings?.makeKeyAndOrderFront(nil)
+        settings?.orderFrontRegardless()
+    }
+    DispatchQueue.main.async { front() }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { front() }
+}
+
+@available(macOS 14.0, *)
+private struct SettingsButton: View {
+    @Environment(\.openSettings) private var openSettings
+    var body: some View {
+        Button("Settings…") {
+            openSettings()
+            bringSettingsWindowToFront()
+        }
+    }
+}
 
 struct MenuView: View {
     @EnvironmentObject var cityStore: CityStore
@@ -19,7 +51,7 @@ struct MenuView: View {
                         Text(city.name)
                             .fontWeight(.medium)
                         Spacer()
-                        Text(city.currentTime())
+                        Text(city.currentTime(for: tick))
                             .foregroundColor(.secondary)
                             .monospacedDigit()
                     }
@@ -49,19 +81,18 @@ struct MenuView: View {
             }
             .padding(.horizontal, 12)
 
-            if #available(macOS 14.0, *) {
-                SettingsLink {
-                    Text("Settings…")
+            Group {
+                if #available(macOS 14.0, *) {
+                    SettingsButton()
+                } else {
+                    Button("Settings…") {
+                        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                        bringSettingsWindowToFront()
+                    }
                 }
-                .padding(.horizontal, 12)
-                .padding(.top, 2)
-            } else {
-                Button("Settings…") {
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                }
-                .padding(.horizontal, 12)
-                .padding(.top, 2)
             }
+            .padding(.horizontal, 12)
+            .padding(.top, 2)
 
             Divider().padding(.vertical, 4)
 

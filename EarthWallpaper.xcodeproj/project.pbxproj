@@ -15,9 +15,9 @@
 		6600DEA85B8E58F99F37D99D /* CityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED5F830E21A4CABE5C8AF30 /* CityTests.swift */; };
 		6AE3FDDF024558743FD36D0B /* CityStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */; };
 		7CB3E1D97A095D49F10C0CE0 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC0C8E2CE4914B59043B93E /* MenuView.swift */; };
+		985805034CB709478AA54568 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DC9AC2F5F1E9AB5DCF1D4DD2 /* AppIcon.icns */; };
 		A19E7295B18D1C9BA787B97E /* XPlanetRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F1FEBFB16A85D0496FEC0 /* XPlanetRunnerTests.swift */; };
 		B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */; };
-		C7CD535F0C308C45D06C46DF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */; };
 		D317E6269CCBCD93C4C0F5F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E572F999678285823728654E /* AppState.swift */; };
 		D77E7924AEC229F190387408 /* EarthWallpaperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAEAE9463707230CA1200B /* EarthWallpaperApp.swift */; };
 		E5BB16D6CBA0E8896B64A4D0 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288F85391182FEF3909EE3B8 /* City.swift */; };
@@ -37,7 +37,6 @@
 		288F85391182FEF3909EE3B8 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		4935F0EA9908EC64F184B2CF /* EarthWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarthWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AC0C8E2CE4914B59043B93E /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreLocation.framework; sourceTree = "<group>"; };
 		7207129104B203D0851AF3CE /* XPlanetRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPlanetRunner.swift; sourceTree = "<group>"; };
 		728AD6F49A5CA9475436097B /* EarthWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityStoreTests.swift; sourceTree = "<group>"; };
@@ -46,6 +45,7 @@
 		8F37A04575A6B4DBE15F1FC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		906F1FEBFB16A85D0496FEC0 /* XPlanetRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPlanetRunnerTests.swift; sourceTree = "<group>"; };
 		C366DA29E73761BF6D5E8046 /* CityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityStore.swift; sourceTree = "<group>"; };
+		DC9AC2F5F1E9AB5DCF1D4DD2 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		DED2F299B702FCB1C925A638 /* WallpaperUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperUpdater.swift; sourceTree = "<group>"; };
 		DED5F830E21A4CABE5C8AF30 /* CityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTests.swift; sourceTree = "<group>"; };
 		E572F999678285823728654E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -53,18 +53,15 @@
 		FC0E56C19615D89D217C8E5C /* GeocoderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocoderService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		00A58F9B5C9302289EF89205 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C7CD535F0C308C45D06C46DF /* CoreLocation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXGroup section */
+		1068756D5FAF60615539CD4E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DC9AC2F5F1E9AB5DCF1D4DD2 /* AppIcon.icns */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		1DE261620272879EA8C8EEE4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,14 +80,6 @@
 				7207129104B203D0851AF3CE /* XPlanetRunner.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		76F5CC8E3E3D965D761BD755 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7D42F66D0D3EF521CD60736C /* EarthWallpaperTests */ = {
@@ -118,7 +107,6 @@
 			children = (
 				E42CD34E444D50A67DA45E33 /* EarthWallpaper */,
 				7D42F66D0D3EF521CD60736C /* EarthWallpaperTests */,
-				76F5CC8E3E3D965D761BD755 /* Frameworks */,
 				CD6B01A15EBA62399DE2A12A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,6 +118,7 @@
 				E5AAEAE9463707230CA1200B /* EarthWallpaperApp.swift */,
 				8F37A04575A6B4DBE15F1FC6 /* Info.plist */,
 				FBBBF4A1AF5A8C4E43120468 /* Models */,
+				1068756D5FAF60615539CD4E /* Resources */,
 				239E9F050DA0D11485CE52EE /* Services */,
 				1DE261620272879EA8C8EEE4 /* Views */,
 			);
@@ -152,7 +141,7 @@
 			buildConfigurationList = 5B7C35CFAD908D321A68CEC3 /* Build configuration list for PBXNativeTarget "EarthWallpaper" */;
 			buildPhases = (
 				D48217E409C86743744873CF /* Sources */,
-				00A58F9B5C9302289EF89205 /* Frameworks */,
+				4DF2E9BF40415365814D04B6 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -217,6 +206,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4DF2E9BF40415365814D04B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				985805034CB709478AA54568 /* AppIcon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AB4332A4FE0C1A1585A5A7 /* Sources */ = {
@@ -384,10 +384,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				INFOPLIST_FILE = EarthWallpaper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -443,10 +439,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				INFOPLIST_FILE = EarthWallpaper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

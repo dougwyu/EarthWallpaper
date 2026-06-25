@@ -42,8 +42,14 @@ fi
 
 # Install
 echo "Installing to /Applications..."
+osascript -e 'quit app "EarthWallpaper"' 2>/dev/null || true
 rm -rf /Applications/EarthWallpaper.app
 cp -r "$APP_PATH" /Applications/EarthWallpaper.app
+
+# Refresh the icon cache so the app icon shows immediately in Finder
+touch /Applications/EarthWallpaper.app
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+    -f -R -trusted /Applications/EarthWallpaper.app 2>/dev/null || true
 
 echo ""
 echo "✓ Installed: /Applications/EarthWallpaper.app"

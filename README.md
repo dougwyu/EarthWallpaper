@@ -21,7 +21,7 @@ A macOS menu bar app that sets your desktop wallpaper to a live map of Earth, sh
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/EarthWallpaper.git
+git clone https://github.com/dougwyu/EarthWallpaper.git
 cd EarthWallpaper
 ./install.sh
 ```
