@@ -1,0 +1,39 @@
+name: EarthWallpaper
+options:
+  bundleIdPrefix: com.earthwallpaper
+  deploymentTarget:
+    macOS: "13.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+
+targets:
+  EarthWallpaper:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: EarthWallpaper
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.earthwallpaper.app
+        INFOPLIST_FILE: EarthWallpaper/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+        ENABLE_APP_SANDBOX: NO
+    dependencies:
+      - framework: CoreLocation.framework
+
+  EarthWallpaperTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - EarthWallpaperTests
+    dependencies:
+      - target: EarthWallpaper
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.earthwallpaper.tests
