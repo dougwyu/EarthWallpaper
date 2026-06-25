@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1B2C3D4E5F60001A1B2C3D4 /* CityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */; };
-		A1B2C3D4E5F60004A1B2C3D4 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003A1B2C3D4 /* City.swift */; };
-		A1B2C3D4E5F60006A1B2C3D4 /* EarthWallpaperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */; };
+		275907911D946AE4B6349505 /* CityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C366DA29E73761BF6D5E8046 /* CityStore.swift */; };
+		6600DEA85B8E58F99F37D99D /* CityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED5F830E21A4CABE5C8AF30 /* CityTests.swift */; };
+		6AE3FDDF024558743FD36D0B /* CityStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */; };
 		B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */; };
 		C7CD535F0C308C45D06C46DF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */; };
+		D77E7924AEC229F190387408 /* EarthWallpaperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAEAE9463707230CA1200B /* EarthWallpaperApp.swift */; };
+		E5BB16D6CBA0E8896B64A4D0 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288F85391182FEF3909EE3B8 /* City.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,14 +27,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		288F85391182FEF3909EE3B8 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		4935F0EA9908EC64F184B2CF /* EarthWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarthWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreLocation.framework; sourceTree = "<group>"; };
 		728AD6F49A5CA9475436097B /* EarthWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityStoreTests.swift; sourceTree = "<group>"; };
 		8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperTests.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTests.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60003A1B2C3D4 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperApp.swift; sourceTree = "<group>"; };
 		8F37A04575A6B4DBE15F1FC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C366DA29E73761BF6D5E8046 /* CityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityStore.swift; sourceTree = "<group>"; };
+		DED5F830E21A4CABE5C8AF30 /* CityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTests.swift; sourceTree = "<group>"; };
+		E5AAEAE9463707230CA1200B /* EarthWallpaperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +51,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		239E9F050DA0D11485CE52EE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C366DA29E73761BF6D5E8046 /* CityStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		76F5CC8E3E3D965D761BD755 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -58,8 +70,9 @@
 		7D42F66D0D3EF521CD60736C /* EarthWallpaperTests */ = {
 			isa = PBXGroup;
 			children = (
+				7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */,
+				DED5F830E21A4CABE5C8AF30 /* CityTests.swift */,
 				8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */,
-				A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */,
 			);
 			path = EarthWallpaperTests;
 			sourceTree = "<group>";
@@ -83,22 +96,23 @@
 			);
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60005A1B2C3D4 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60003A1B2C3D4 /* City.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		E42CD34E444D50A67DA45E33 /* EarthWallpaper */ = {
 			isa = PBXGroup;
 			children = (
+				E5AAEAE9463707230CA1200B /* EarthWallpaperApp.swift */,
 				8F37A04575A6B4DBE15F1FC6 /* Info.plist */,
-				A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */,
-				A1B2C3D4E5F60005A1B2C3D4 /* Models */,
+				FBBBF4A1AF5A8C4E43120468 /* Models */,
+				239E9F050DA0D11485CE52EE /* Services */,
 			);
 			path = EarthWallpaper;
+			sourceTree = "<group>";
+		};
+		FBBBF4A1AF5A8C4E43120468 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				288F85391182FEF3909EE3B8 /* City.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,8 +194,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AE3FDDF024558743FD36D0B /* CityStoreTests.swift in Sources */,
+				6600DEA85B8E58F99F37D99D /* CityTests.swift in Sources */,
 				B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */,
-				A1B2C3D4E5F60001A1B2C3D4 /* CityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,8 +204,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60006A1B2C3D4 /* EarthWallpaperApp.swift in Sources */,
-				A1B2C3D4E5F60004A1B2C3D4 /* City.swift in Sources */,
+				E5BB16D6CBA0E8896B64A4D0 /* City.swift in Sources */,
+				275907911D946AE4B6349505 /* CityStore.swift in Sources */,
+				D77E7924AEC229F190387408 /* EarthWallpaperApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
