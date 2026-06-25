@@ -58,10 +58,22 @@ struct XPlanetRunner {
 
         try writeMarkers(cities: cities, to: markersURL)
 
-        let screen = NSScreen.main ?? NSScreen.screens[0]
-        let scale = screen.backingScaleFactor
-        let w = Int(screen.frame.width * scale)
-        let h = Int(screen.frame.height * scale)
+        // NSScreen must be accessed on the main thread
+        var w = 2560
+        var h = 1440
+        if Thread.isMainThread {
+            let screen = NSScreen.main ?? NSScreen.screens[0]
+            let scale = screen.backingScaleFactor
+            w = Int(screen.frame.width * scale)
+            h = Int(screen.frame.height * scale)
+        } else {
+            DispatchQueue.main.sync {
+                let screen = NSScreen.main ?? NSScreen.screens[0]
+                let scale = screen.backingScaleFactor
+                w = Int(screen.frame.width * scale)
+                h = Int(screen.frame.height * scale)
+            }
+        }
 
         var args = [
             "-num_times", "1",
@@ -94,8 +106,11 @@ struct XPlanetRunner {
     }
 
     static func setWallpaper(imageURL: URL) {
-        for screen in NSScreen.screens {
-            try? NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
+        let block = {
+            for screen in NSScreen.screens {
+                try? NSWorkspace.shared.setDesktopImageURL(imageURL, for: screen, options: [:])
+            }
         }
+        if Thread.isMainThread { block() } else { DispatchQueue.main.sync { block() } }
     }
 }
