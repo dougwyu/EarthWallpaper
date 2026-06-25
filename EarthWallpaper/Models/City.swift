@@ -16,10 +16,10 @@ struct City: Codable, Identifiable, Equatable {
         self.timezone = timezone
     }
 
-    func currentTime() -> String {
+    func currentTime(for date: Date = Date()) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         formatter.timeZone = TimeZone(identifier: timezone) ?? .current
-        return formatter.string(from: Date())
+        return formatter.string(from: date)
     }
 }
