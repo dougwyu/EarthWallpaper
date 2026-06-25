@@ -1,12 +1,14 @@
 import XCTest
 @testable import EarthWallpaper
 
+@MainActor
 final class CityStoreTests: XCTestCase {
 
     var store: CityStore!
-    let testKey = "cities_test_\(UUID().uuidString)"
+    var testKey: String = ""
 
     override func setUp() {
+        testKey = "cities_test_\(UUID().uuidString)"
         store = CityStore(userDefaultsKey: testKey)
     }
 

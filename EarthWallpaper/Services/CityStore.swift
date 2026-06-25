@@ -1,11 +1,12 @@
 import Foundation
 import Combine
 
+@MainActor
 class CityStore: ObservableObject {
     @Published private(set) var cities: [City] = []
     private let key: String
 
-    init(userDefaultsKey: String = "cities") {
+    init(userDefaultsKey: String = "com.earthwallpaper.cities") {
         self.key = userDefaultsKey
         load()
     }
@@ -21,8 +22,12 @@ class CityStore: ObservableObject {
     }
 
     private func save() {
-        guard let data = try? JSONEncoder().encode(cities) else { return }
-        UserDefaults.standard.set(data, forKey: key)
+        do {
+            let data = try JSONEncoder().encode(cities)
+            UserDefaults.standard.set(data, forKey: key)
+        } catch {
+            assertionFailure("CityStore: encode failed — \(error)")
+        }
     }
 
     private func load() {
