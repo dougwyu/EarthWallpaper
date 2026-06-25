@@ -49,11 +49,19 @@ struct MenuView: View {
             }
             .padding(.horizontal, 12)
 
-            SettingsLink {
-                Text("Settings…")
+            if #available(macOS 14.0, *) {
+                SettingsLink {
+                    Text("Settings…")
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 2)
+            } else {
+                Button("Settings…") {
+                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 2)
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 2)
 
             Divider().padding(.vertical, 4)
 

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class WallpaperUpdater: ObservableObject {
     @Published var isUpdating = false
     @Published var lastError: String?
