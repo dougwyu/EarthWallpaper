@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D4E5F60001A1B2C3D4 /* CityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */; };
+		A1B2C3D4E5F60004A1B2C3D4 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003A1B2C3D4 /* City.swift */; };
+		A1B2C3D4E5F60006A1B2C3D4 /* EarthWallpaperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */; };
 		B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */; };
 		C7CD535F0C308C45D06C46DF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
@@ -26,6 +29,9 @@
 		5DD2F54A3A8225D05C0F9C98 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreLocation.framework; sourceTree = "<group>"; };
 		728AD6F49A5CA9475436097B /* EarthWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperTests.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTests.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60003A1B2C3D4 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperApp.swift; sourceTree = "<group>"; };
 		8F37A04575A6B4DBE15F1FC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */,
+				A1B2C3D4E5F60002A1B2C3D4 /* CityTests.swift */,
 			);
 			path = EarthWallpaperTests;
 			sourceTree = "<group>";
@@ -76,10 +83,20 @@
 			);
 			sourceTree = "<group>";
 		};
+		A1B2C3D4E5F60005A1B2C3D4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F60003A1B2C3D4 /* City.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		E42CD34E444D50A67DA45E33 /* EarthWallpaper */ = {
 			isa = PBXGroup;
 			children = (
 				8F37A04575A6B4DBE15F1FC6 /* Info.plist */,
+				A1B2C3D4E5F60007A1B2C3D4 /* EarthWallpaperApp.swift */,
+				A1B2C3D4E5F60005A1B2C3D4 /* Models */,
 			);
 			path = EarthWallpaper;
 			sourceTree = "<group>";
@@ -164,6 +181,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */,
+				A1B2C3D4E5F60001A1B2C3D4 /* CityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +189,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D4E5F60006A1B2C3D4 /* EarthWallpaperApp.swift in Sources */,
+				A1B2C3D4E5F60004A1B2C3D4 /* City.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +352,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -349,6 +370,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
