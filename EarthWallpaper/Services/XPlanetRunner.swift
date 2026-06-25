@@ -1,4 +1,3 @@
-import AppKit
 import Foundation
 
 enum XPlanetError: LocalizedError {
@@ -33,11 +32,8 @@ struct XPlanetRunner {
 
     // MARK: - Marker file
 
-    static func markerLine(for city: City) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        formatter.timeZone = TimeZone(identifier: city.timezone) ?? .current
-        let time = formatter.string(from: Date())
+    static func markerLine(for city: City, date: Date = Date()) -> String {
+        let time = city.currentTime(for: date)
         // Replace any double-quotes in name to avoid breaking the marker file format
         let safeName = city.name.replacingOccurrences(of: "\"", with: "'")
         return "\(city.latitude) \(city.longitude) \"\(safeName) \(time)\" color=white fontsize=14"

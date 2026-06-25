@@ -6,19 +6,30 @@ final class XPlanetRunnerTests: XCTestCase {
     func test_markerLine_format() {
         let city = City(name: "Tokyo", latitude: 35.6762, longitude: 139.6503,
                         timezone: "Asia/Tokyo")
-        let line = XPlanetRunner.markerLine(for: city)
+        // Fixed date: 2024-01-15 12:00:00 UTC → 21:00 in Tokyo (UTC+9)
+        var components = DateComponents()
+        components.year = 2024; components.month = 1; components.day = 15
+        components.hour = 12; components.minute = 0; components.second = 0
+        components.timeZone = TimeZone(identifier: "UTC")
+        let fixedDate = Calendar.current.date(from: components)!
+
+        let line = XPlanetRunner.markerLine(for: city, date: fixedDate)
 
         XCTAssertTrue(line.hasPrefix("35.6762 139.6503 "))
         XCTAssertTrue(line.contains("\"Tokyo "))
-        let pattern = #""Tokyo \d{2}:\d{2}""#
-        XCTAssertTrue(line.range(of: pattern, options: .regularExpression) != nil,
-                      "Expected pattern '\(pattern)' in: \(line)")
+        XCTAssertTrue(line.contains("\"Tokyo 21:00\""))
     }
 
     func test_markerLine_escapesDoubleQuotesInName() {
         let city = City(name: "San \"Paolo\"", latitude: -23.55, longitude: -46.63,
                         timezone: "America/Sao_Paulo")
-        let line = XPlanetRunner.markerLine(for: city)
+        var components = DateComponents()
+        components.year = 2024; components.month = 1; components.day = 15
+        components.hour = 12; components.minute = 0; components.second = 0
+        components.timeZone = TimeZone(identifier: "UTC")
+        let fixedDate = Calendar.current.date(from: components)!
+
+        let line = XPlanetRunner.markerLine(for: city, date: fixedDate)
         XCTAssertFalse(line.contains("\"San \"Paolo\""),
                        "Unescaped double-quotes in city name break xplanet's marker format")
         XCTAssertTrue(line.contains("San 'Paolo'"),
