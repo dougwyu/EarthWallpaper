@@ -4,6 +4,8 @@ A macOS menu bar app that fills your desktop with a live map of Earth, showing t
 
 ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue) ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue)
 
+![EarthWallpaper screenshot](docs/screenshot.png)
+
 ## What it does
 
 - Renders a flat map of Earth with accurate day/night shading, refreshed on a schedule you choose
