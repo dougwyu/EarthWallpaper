@@ -60,6 +60,17 @@ struct MenuView: View {
                 }
             }
 
+            let moon = MoonPhase(date: tick)
+            HStack {
+                Text("\(moon.emoji) Moon")
+                    .fontWeight(.medium)
+                Spacer()
+                Text("\(moon.phaseName) · \(Int((moon.illuminatedFraction * 100).rounded()))%")
+                    .foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+
             Divider().padding(.vertical, 4)
 
             if let error = updater.lastError {

@@ -33,19 +33,22 @@ class WallpaperUpdater: ObservableObject {
     }
 
     func updateNow() {
-        performUpdate()
+        // A user-initiated update means "give me a fully fresh map", so bypass
+        // the base-map cache; timer ticks let the cache decide.
+        performUpdate(forceBaseRefresh: true)
     }
 
-    private func performUpdate() {
+    private func performUpdate(forceBaseRefresh: Bool = false) {
         guard !isUpdating else { return }
         let cities = currentCities
         isUpdating = true
         lastError = nil
         DispatchQueue.global(qos: .utility).async { [weak self] in
             do {
-                let imageURL = try XPlanetRunner.run(cities: cities)
+                let baseURL = try XPlanetRunner.baseMap(forceRefresh: forceBaseRefresh)
+                let image = try XPlanetRunner.annotate(baseMapAt: baseURL, cities: cities)
                 DispatchQueue.main.async {
-                    DesktopOverlay.shared.show(imageURL: imageURL)
+                    DesktopOverlay.shared.show(cgImage: image)
                     self?.isUpdating = false
                 }
             } catch {

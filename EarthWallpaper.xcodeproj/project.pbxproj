@@ -14,9 +14,11 @@
 		57B6B8083181DC4E28752AFF /* XPlanetRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7207129104B203D0851AF3CE /* XPlanetRunner.swift */; };
 		6600DEA85B8E58F99F37D99D /* CityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED5F830E21A4CABE5C8AF30 /* CityTests.swift */; };
 		6AE3FDDF024558743FD36D0B /* CityStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */; };
+		7ADA66EA45BC988B8F598F21 /* MoonPhaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D723D05E5CDFB9C35E0C4 /* MoonPhaseTests.swift */; };
 		7CB3E1D97A095D49F10C0CE0 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC0C8E2CE4914B59043B93E /* MenuView.swift */; };
 		985805034CB709478AA54568 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DC9AC2F5F1E9AB5DCF1D4DD2 /* AppIcon.icns */; };
 		9AFF873353446F3C7B8693C1 /* DesktopOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1712DF1148561C6E0E7CAB98 /* DesktopOverlay.swift */; };
+		A14D7323715F797E746C03B0 /* MoonPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766E18D3C52ADA82675738D4 /* MoonPhase.swift */; };
 		A19E7295B18D1C9BA787B97E /* XPlanetRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F1FEBFB16A85D0496FEC0 /* XPlanetRunnerTests.swift */; };
 		B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */; };
 		D317E6269CCBCD93C4C0F5F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E572F999678285823728654E /* AppState.swift */; };
@@ -37,10 +39,12 @@
 /* Begin PBXFileReference section */
 		1712DF1148561C6E0E7CAB98 /* DesktopOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopOverlay.swift; sourceTree = "<group>"; };
 		288F85391182FEF3909EE3B8 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		2C4D723D05E5CDFB9C35E0C4 /* MoonPhaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonPhaseTests.swift; sourceTree = "<group>"; };
 		4935F0EA9908EC64F184B2CF /* EarthWallpaperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarthWallpaperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AC0C8E2CE4914B59043B93E /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		7207129104B203D0851AF3CE /* XPlanetRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPlanetRunner.swift; sourceTree = "<group>"; };
 		728AD6F49A5CA9475436097B /* EarthWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EarthWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		766E18D3C52ADA82675738D4 /* MoonPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonPhase.swift; sourceTree = "<group>"; };
 		7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityStoreTests.swift; sourceTree = "<group>"; };
 		8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthWallpaperTests.swift; sourceTree = "<group>"; };
 		8E4C4F7F4B4B191E7B4D9BFF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -91,6 +95,7 @@
 				7EEFE2E0850BAF3D04361572 /* CityStoreTests.swift */,
 				DED5F830E21A4CABE5C8AF30 /* CityTests.swift */,
 				8D5CCA8D1ADBE26BF7988821 /* EarthWallpaperTests.swift */,
+				2C4D723D05E5CDFB9C35E0C4 /* MoonPhaseTests.swift */,
 				906F1FEBFB16A85D0496FEC0 /* XPlanetRunnerTests.swift */,
 			);
 			path = EarthWallpaperTests;
@@ -132,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				288F85391182FEF3909EE3B8 /* City.swift */,
+				766E18D3C52ADA82675738D4 /* MoonPhase.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -229,6 +235,7 @@
 				6AE3FDDF024558743FD36D0B /* CityStoreTests.swift in Sources */,
 				6600DEA85B8E58F99F37D99D /* CityTests.swift in Sources */,
 				B959AA6D1F53CE055927FE9E /* EarthWallpaperTests.swift in Sources */,
+				7ADA66EA45BC988B8F598F21 /* MoonPhaseTests.swift in Sources */,
 				A19E7295B18D1C9BA787B97E /* XPlanetRunnerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,6 +251,7 @@
 				D77E7924AEC229F190387408 /* EarthWallpaperApp.swift in Sources */,
 				0C384834A38B4B8CAD48C875 /* GeocoderService.swift in Sources */,
 				7CB3E1D97A095D49F10C0CE0 /* MenuView.swift in Sources */,
+				A14D7323715F797E746C03B0 /* MoonPhase.swift in Sources */,
 				4F3FCF6007F66C71CE6731A7 /* SettingsView.swift in Sources */,
 				4531D228D63F6E7096C55011 /* WallpaperUpdater.swift in Sources */,
 				57B6B8083181DC4E28752AFF /* XPlanetRunner.swift in Sources */,

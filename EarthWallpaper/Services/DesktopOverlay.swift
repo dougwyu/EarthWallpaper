@@ -26,9 +26,10 @@ final class DesktopOverlay {
         )
     }
 
-    /// Show (or refresh) the overlay with the image at `imageURL`.
-    func show(imageURL: URL) {
-        guard let image = NSImage(contentsOf: imageURL) else { return }
+    /// Show (or refresh) the overlay with a freshly composited image. Taking a
+    /// CGImage directly avoids an 8 MB PNG encode + decode round-trip per tick.
+    func show(cgImage: CGImage) {
+        let image = NSImage(cgImage: cgImage, size: .zero)   // .zero → use pixel size
         currentImage = image
         rebuildWindows()
         apply(image)

@@ -8,7 +8,8 @@ A macOS menu bar app that fills your desktop with a live map of Earth, showing t
 
 - Renders a flat map of Earth with accurate day/night shading, refreshed on a schedule you choose
 - Lets you pin cities by name — each appears on the map as a yellow marker with its current local time
-- Lives in the menu bar; press your Show Desktop key (e.g. F12) to glance at the map, then return to work
+- Shows the current moon phase (name and % illumination) as an inset on the map and in the menu bar dropdown
+- Lives in the menu bar; use the Show Desktop trackpad gesture (or key) to glance at the map, then return to work
 
 ## Requirements
 
@@ -55,8 +56,8 @@ Settings persist across restarts via `UserDefaults`.
 
 EarthWallpaper is a thin Swift/SwiftUI wrapper around [xplanet](https://xplanet.sourceforge.net/). On each update cycle it:
 
-1. Runs `xplanet` with `-projection rectangular` to produce a full-Earth PNG sized to your screen, with accurate day/night shading.
-2. Draws the city markers and time labels on top with Core Graphics — bright yellow dots and `HH:MM` text. (xplanet's own marker/text rendering is unreliable on some Homebrew builds, so the app renders the labels itself.)
+1. Runs `xplanet` with `-projection rectangular` to produce a full-Earth PNG sized to your screen, with accurate day/night shading. This base map is cached and only re-rendered every ~10 minutes — the terminator barely moves per minute, so re-rendering each tick would be wasted work.
+2. Draws the annotation layer on the cached base with Core Graphics — bright yellow city dots and `HH:MM` labels, plus a moon-phase inset (computed from a truncated Meeus series, verified against known eclipses). xplanet's own marker/text rendering is unreliable on some Homebrew builds, so the app renders all of this itself.
 3. Displays the result in a borderless window pinned just below the desktop icons.
 
 City coordinates and time zones are resolved via the free [Open-Meteo geocoding API](https://open-meteo.com/en/docs/geocoding-api) — no API key, and it works for cities worldwide.

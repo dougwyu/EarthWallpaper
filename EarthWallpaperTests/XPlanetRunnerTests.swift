@@ -1,7 +1,77 @@
 import XCTest
+import CoreGraphics
+import CoreText
+import ImageIO
+import UniformTypeIdentifiers
 @testable import EarthWallpaper
 
 final class XPlanetRunnerTests: XCTestCase {
+
+    // MARK: - Helpers
+
+    private func writePNG(_ image: CGImage, to url: URL) {
+        guard let dest = CGImageDestinationCreateWithURL(
+            url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return }
+        CGImageDestinationAddImage(dest, image, nil)
+        CGImageDestinationFinalize(dest)
+    }
+
+    private func makeContext(width: Int, height: Int) -> CGContext {
+        CGContext(data: nil, width: width, height: height,
+                  bitsPerComponent: 8, bytesPerRow: 0,
+                  space: CGColorSpaceCreateDeviceRGB(),
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    }
+
+    /// A synthetic dark-blue "base map" PNG standing in for xplanet output.
+    private func makeBasePNG(width: Int, height: Int) -> URL {
+        let ctx = makeContext(width: width, height: height)
+        ctx.setFillColor(CGColor(red: 0.05, green: 0.10, blue: 0.30, alpha: 1))
+        ctx.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("base_\(UUID().uuidString).png")
+        writePNG(ctx.makeImage()!, to: url)
+        return url
+    }
+
+    // MARK: - Annotation
+
+    func test_annotate_returnsImageMatchingBaseSize() throws {
+        let base = makeBasePNG(width: 800, height: 400)
+        defer { try? FileManager.default.removeItem(at: base) }
+        let cities = [
+            City(name: "London", latitude: 51.5, longitude: -0.13, timezone: "Europe/London"),
+            City(name: "Sydney", latitude: -33.87, longitude: 151.21, timezone: "Australia/Sydney")
+        ]
+        let image = try XPlanetRunner.annotate(baseMapAt: base, cities: cities)
+        XCTAssertEqual(image.width, 800)
+        XCTAssertEqual(image.height, 400)
+        // Dump for manual inspection of labels + moon inset.
+        writePNG(image, to: URL(fileURLWithPath: "/tmp/ew_annotate_test.png"))
+    }
+
+    func test_annotate_missingBase_throws() {
+        let missing = FileManager.default.temporaryDirectory
+            .appendingPathComponent("nope_\(UUID().uuidString).png")
+        XCTAssertThrowsError(try XPlanetRunner.annotate(baseMapAt: missing, cities: []))
+    }
+
+    // Renders every principal phase into one strip for visual verification.
+    func test_moonDisc_rendersAllPhases() {
+        let ctx = makeContext(width: 880, height: 140)
+        ctx.setFillColor(CGColor(red: 0.05, green: 0.10, blue: 0.30, alpha: 1))
+        ctx.fill(CGRect(x: 0, y: 0, width: 880, height: 140))
+        let combos: [(Double, Bool)] = [
+            (0.03, true), (0.25, true), (0.5, true), (0.75, true),
+            (0.97, true), (0.75, false), (0.5, false), (0.25, false)
+        ]
+        for (i, combo) in combos.enumerated() {
+            XPlanetRunner.drawMoonDisc(fraction: combo.0, waxing: combo.1,
+                                       center: CGPoint(x: 55 + 110 * i, y: 70),
+                                       radius: 45, in: ctx)
+        }
+        writePNG(ctx.makeImage()!, to: URL(fileURLWithPath: "/tmp/ew_moon_strip.png"))
+    }
 
     // Equirectangular: lon=0, lat=0 → centre of image
     func test_pixelPosition_equator_primeMeridian() {
