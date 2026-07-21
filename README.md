@@ -9,6 +9,7 @@ A macOS menu bar app that fills your desktop with a live map of Earth, showing t
 - Renders a flat map of Earth with accurate day/night shading, refreshed on a schedule you choose
 - Lets you pin cities by name — each appears on the map as a yellow marker with its current local time
 - Shows the current moon phase (name and % illumination) as an inset on the map and in the menu bar dropdown
+- Marks where the Sun and Moon are directly overhead — a sun glyph at the subsolar point and a mini phase disc at the sublunar point, moving across the map in real time
 - Lives in the menu bar; use the Show Desktop trackpad gesture (or key) to glance at the map, then return to work
 
 ## Requirements

@@ -164,6 +164,18 @@ struct XPlanetRunner {
 
         let fontSize = max(8, CGFloat(w) / 160)
         let font = CTFontCreateWithName("Helvetica-Bold" as CFString, fontSize, nil)
+        let moon = MoonPhase(date: date)
+
+        // Sun and Moon overhead markers, drawn before the city labels so the
+        // labels stay on top if they ever coincide.
+        let bodyRadius = max(6, fontSize * 0.7)
+        let sun = Ephemeris.subsolarPoint(date: date)
+        drawSunMarker(at: pixelPosition(latitude: sun.latitude, longitude: sun.longitude, size: size),
+                      radius: bodyRadius, in: ctx)
+        let sublunar = Ephemeris.sublunarPoint(date: date)
+        drawMoonDisc(fraction: moon.illuminatedFraction, waxing: moon.waxing,
+                     center: pixelPosition(latitude: sublunar.latitude, longitude: sublunar.longitude, size: size),
+                     radius: bodyRadius, in: ctx)
 
         if !cities.isEmpty {
             let dotRadius = max(4, fontSize * 0.28)
@@ -188,12 +200,44 @@ struct XPlanetRunner {
             }
         }
 
-        drawMoonInset(MoonPhase(date: date), imageSize: size, font: font, in: ctx)
+        drawMoonInset(moon, imageSize: size, font: font, in: ctx)
 
         guard let result = ctx.makeImage() else {
             throw XPlanetError.processFailed("Cannot render annotated image")
         }
         return result
+    }
+
+    // MARK: - Sun marker
+
+    /// Compact sun glyph at the subsolar point: warm disc with eight rays.
+    static func drawSunMarker(at center: CGPoint, radius: CGFloat, in ctx: CGContext) {
+        let core = CGColor(red: 1.0, green: 0.85, blue: 0.20, alpha: 1)
+
+        ctx.saveGState()
+        ctx.setLineCap(.round)
+        for k in 0..<8 {
+            let a = CGFloat(k) * .pi / 4
+            let p1 = CGPoint(x: center.x + cos(a) * radius * 1.35,
+                             y: center.y + sin(a) * radius * 1.35)
+            let p2 = CGPoint(x: center.x + cos(a) * radius * 1.85,
+                             y: center.y + sin(a) * radius * 1.85)
+            // ink underlay for contrast, then the bright ray
+            ctx.setStrokeColor(labelInk)
+            ctx.setLineWidth(max(2.5, radius * 0.34))
+            ctx.move(to: p1); ctx.addLine(to: p2); ctx.strokePath()
+            ctx.setStrokeColor(core)
+            ctx.setLineWidth(max(1.5, radius * 0.22))
+            ctx.move(to: p1); ctx.addLine(to: p2); ctx.strokePath()
+        }
+        let rect = CGRect(x: center.x - radius, y: center.y - radius,
+                          width: radius * 2, height: radius * 2)
+        ctx.setFillColor(core)
+        ctx.fillEllipse(in: rect)
+        ctx.setStrokeColor(labelInk)
+        ctx.setLineWidth(max(1.5, radius * 0.15))
+        ctx.strokeEllipse(in: rect)
+        ctx.restoreGState()
     }
 
     // MARK: - Moon inset
