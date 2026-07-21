@@ -70,7 +70,7 @@ struct SettingsView: View {
             }
 
             GroupBox {
-                Text("Tip: assign a Function key to 'Show Desktop' in\nSystem Settings → Keyboard → Keyboard Shortcuts → Mission Control")
+                Text("Tip: to check the clock one-handed, spread your thumb and three fingers apart on the trackpad to show the desktop.\nEnable it in System Settings → Trackpad → More Gestures → Show Desktop.\n(The keyboard shortcut, fn-F11, needs two hands.)")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
