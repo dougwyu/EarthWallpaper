@@ -170,32 +170,40 @@ struct XPlanetRunner {
         // labels stay on top if they ever coincide.
         let bodyRadius = max(6, fontSize * 0.7)
         let sun = Ephemeris.subsolarPoint(date: date)
-        drawSunMarker(at: pixelPosition(latitude: sun.latitude, longitude: sun.longitude, size: size),
-                      radius: bodyRadius, in: ctx)
+        let sunPix = pixelPosition(latitude: sun.latitude, longitude: sun.longitude, size: size)
+        drawSunMarker(at: sunPix, radius: bodyRadius, in: ctx)
         let sublunar = Ephemeris.sublunarPoint(date: date)
+        let moonPix = pixelPosition(latitude: sublunar.latitude, longitude: sublunar.longitude, size: size)
         drawMoonDisc(fraction: moon.illuminatedFraction, waxing: moon.waxing,
-                     center: pixelPosition(latitude: sublunar.latitude, longitude: sublunar.longitude, size: size),
-                     radius: bodyRadius, in: ctx)
+                     center: moonPix, radius: bodyRadius, in: ctx)
 
         if !cities.isEmpty {
             let dotRadius = max(4, fontSize * 0.28)
+            let anchors = cities.map { pixelPosition(latitude: $0.latitude, longitude: $0.longitude, size: size) }
+            let labels = cities.map { "\($0.name)  \($0.currentTime(for: date))" }
+            let widths = labels.map { textWidth($0, font: font) }
+            // The sun/moon markers (rays included) are obstacles too, so a
+            // label never lands on top of them.
+            let bodyObstacles = [sunPix, moonPix].map {
+                CGRect(x: $0.x - bodyRadius * 1.9, y: $0.y - bodyRadius * 1.9,
+                       width: bodyRadius * 3.8, height: bodyRadius * 3.8)
+            }
+            let origins = labelOrigins(for: anchors, labelWidths: widths,
+                                       fontSize: fontSize, dotRadius: dotRadius,
+                                       obstacles: bodyObstacles)
 
-            for city in cities {
-                let pt = pixelPosition(latitude: city.latitude, longitude: city.longitude, size: size)
-
+            for i in cities.indices {
                 // Dot
                 ctx.setFillColor(labelYellow)
                 ctx.setStrokeColor(labelInk)
                 ctx.setLineWidth(max(1.5, dotRadius * 0.4))
-                let dotRect = CGRect(x: pt.x - dotRadius, y: pt.y - dotRadius,
+                let dotRect = CGRect(x: anchors[i].x - dotRadius, y: anchors[i].y - dotRadius,
                                      width: dotRadius * 2, height: dotRadius * 2)
                 ctx.fillEllipse(in: dotRect)
                 ctx.strokeEllipse(in: dotRect)
 
-                // Label: "City Name  HH:MM"
-                let label = "\(city.name)  \(city.currentTime(for: date))"
-                drawText(label,
-                         at: CGPoint(x: pt.x + dotRadius + 5, y: pt.y - fontSize * 0.38),
+                // Label: "City Name  HH:MM", at its collision-avoided position
+                drawText(labels[i], at: origins[i],
                          font: font, textColor: labelYellow, shadowColor: labelInk, in: ctx)
             }
         }
@@ -206,6 +214,65 @@ struct XPlanetRunner {
             throw XPlanetError.processFailed("Cannot render annotated image")
         }
         return result
+    }
+
+    // MARK: - Label layout
+
+    /// Chooses a text origin for each city label so labels overlap neither each
+    /// other, nor any city dot, nor extra obstacles (the sun/moon markers).
+    /// Candidates, in preference order: right of the dot (the classic spot),
+    /// right shifted up a line, right shifted down, left of the dot, then
+    /// stacked further down as a last resort. Cities keep their stored order,
+    /// so earlier cities claim the preferred spots deterministically.
+    static func labelOrigins(for anchors: [CGPoint], labelWidths: [CGFloat],
+                             fontSize: CGFloat, dotRadius: CGFloat,
+                             obstacles: [CGRect] = []) -> [CGPoint] {
+        let lineHeight = fontSize * 1.35
+        let pad = dotRadius + 5
+        // Every dot is an obstacle from the start, so no label lands on a
+        // neighbouring city's dot.
+        var claimed: [CGRect] = obstacles + anchors.map {
+            CGRect(x: $0.x - dotRadius - 2, y: $0.y - dotRadius - 2,
+                   width: (dotRadius + 2) * 2, height: (dotRadius + 2) * 2)
+        }
+        var origins: [CGPoint] = []
+
+        for (i, anchor) in anchors.enumerated() {
+            let width = labelWidths[i]
+            let rightX = anchor.x + pad
+            let baseY = anchor.y - fontSize * 0.38
+            var candidates: [CGPoint] = [
+                CGPoint(x: rightX, y: baseY),                        // right, centred
+                CGPoint(x: rightX, y: baseY + lineHeight),           // right, up
+                CGPoint(x: rightX, y: baseY - lineHeight),           // right, down
+                CGPoint(x: anchor.x - pad - width, y: baseY)         // left, centred
+            ]
+            for k in 2...6 {                                         // deep fallback
+                candidates.append(CGPoint(x: rightX, y: baseY - lineHeight * CGFloat(k)))
+            }
+
+            let chosen = candidates.first { c in
+                let r = labelRect(origin: c, width: width, fontSize: fontSize)
+                return !claimed.contains { $0.intersects(r) }
+            } ?? candidates[0]
+
+            claimed.append(labelRect(origin: chosen, width: width, fontSize: fontSize))
+            origins.append(chosen)
+        }
+        return origins
+    }
+
+    /// The rectangle a label occupies for collision purposes (origin is the
+    /// text baseline start, as used by drawText). Slightly padded for air.
+    static func labelRect(origin: CGPoint, width: CGFloat, fontSize: CGFloat) -> CGRect {
+        CGRect(x: origin.x - 2, y: origin.y - fontSize * 0.3,
+               width: width + 4, height: fontSize * 1.35)
+    }
+
+    static func textWidth(_ text: String, font: CTFont) -> CGFloat {
+        let attrs: [NSAttributedString.Key: Any] = [kCTFontAttributeName as NSAttributedString.Key: font]
+        let line = CTLineCreateWithAttributedString(NSAttributedString(string: text, attributes: attrs))
+        return CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
     }
 
     // MARK: - Sun marker
@@ -256,14 +323,8 @@ struct XPlanetRunner {
 
         // Caption, right-aligned to the inset margin so it never runs off-screen.
         let caption = "\(moon.phaseName)  \(Int((moon.illuminatedFraction * 100).rounded()))%"
-        let attrs: [NSAttributedString.Key: Any] = [
-            kCTFontAttributeName as NSAttributedString.Key: font,
-            kCTForegroundColorAttributeName as NSAttributedString.Key: labelYellow
-        ]
-        let line = CTLineCreateWithAttributedString(NSAttributedString(string: caption, attributes: attrs))
-        let lineWidth = CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
         drawText(caption,
-                 at: CGPoint(x: imageSize.width - margin - lineWidth, y: margin),
+                 at: CGPoint(x: imageSize.width - margin - textWidth(caption, font: font), y: margin),
                  font: font, textColor: labelYellow, shadowColor: labelInk, in: ctx)
     }
 

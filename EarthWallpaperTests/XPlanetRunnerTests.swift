@@ -56,6 +56,94 @@ final class XPlanetRunnerTests: XCTestCase {
         XCTAssertThrowsError(try XPlanetRunner.annotate(baseMapAt: missing, cities: []))
     }
 
+    // MARK: - Label collision avoidance
+
+    private func rects(anchors: [CGPoint], widths: [CGFloat],
+                       fontSize: CGFloat = 24, dotRadius: CGFloat = 7) -> [CGRect] {
+        let origins = XPlanetRunner.labelOrigins(for: anchors, labelWidths: widths,
+                                                 fontSize: fontSize, dotRadius: dotRadius)
+        return zip(origins, widths).map {
+            XPlanetRunner.labelRect(origin: $0, width: $1, fontSize: fontSize)
+        }
+    }
+
+    private func assertPairwiseDisjoint(_ rects: [CGRect],
+                                        file: StaticString = #filePath, line: UInt = #line) {
+        for i in rects.indices {
+            for j in rects.indices where j > i {
+                XCTAssertFalse(rects[i].intersects(rects[j]),
+                               "labels \(i) and \(j) overlap: \(rects[i]) vs \(rects[j])",
+                               file: file, line: line)
+            }
+        }
+    }
+
+    func test_labelOrigins_coincidentAnchors_doNotOverlap() {
+        let anchors = [CGPoint(x: 500, y: 300), CGPoint(x: 505, y: 302)]
+        assertPairwiseDisjoint(rects(anchors: anchors, widths: [220, 200]))
+    }
+
+    // A tight cluster like London/Paris/Amsterdam/Berlin must all resolve.
+    func test_labelOrigins_clusteredAnchors_allDisjoint() {
+        let anchors = [
+            CGPoint(x: 500, y: 300), CGPoint(x: 540, y: 310),
+            CGPoint(x: 520, y: 290), CGPoint(x: 560, y: 305),
+            CGPoint(x: 510, y: 315)
+        ]
+        assertPairwiseDisjoint(rects(anchors: anchors, widths: [220, 180, 260, 200, 240]))
+    }
+
+    // A label must not sit on top of another city's dot: anchor B lies exactly
+    // where A's default label would run.
+    func test_labelOrigins_avoidNeighbouringDots() {
+        let fontSize: CGFloat = 24
+        let dotRadius: CGFloat = 7
+        let anchors = [CGPoint(x: 500, y: 300), CGPoint(x: 580, y: 300)]
+        let origins = XPlanetRunner.labelOrigins(for: anchors, labelWidths: [220, 220],
+                                                 fontSize: fontSize, dotRadius: dotRadius)
+        let labelA = XPlanetRunner.labelRect(origin: origins[0], width: 220, fontSize: fontSize)
+        let dotB = CGRect(x: 580 - dotRadius, y: 300 - dotRadius,
+                          width: dotRadius * 2, height: dotRadius * 2)
+        XCTAssertFalse(labelA.intersects(dotB), "label A overlaps city B's dot")
+    }
+
+    // Labels must dodge extra obstacles (the sun/moon markers).
+    func test_labelOrigins_avoidObstacles() {
+        let fontSize: CGFloat = 24
+        let obstacle = CGRect(x: 540, y: 280, width: 50, height: 50)  // in default label path
+        let origins = XPlanetRunner.labelOrigins(for: [CGPoint(x: 500, y: 300)],
+                                                 labelWidths: [220],
+                                                 fontSize: fontSize, dotRadius: 7,
+                                                 obstacles: [obstacle])
+        let rect = XPlanetRunner.labelRect(origin: origins[0], width: 220, fontSize: fontSize)
+        XCTAssertFalse(rect.intersects(obstacle))
+    }
+
+    // Far-apart labels keep the classic right-of-dot placement.
+    func test_labelOrigins_distantAnchors_useDefaultPosition() {
+        let anchors = [CGPoint(x: 200, y: 300), CGPoint(x: 2000, y: 1200)]
+        let origins = XPlanetRunner.labelOrigins(for: anchors, labelWidths: [220, 220],
+                                                 fontSize: 24, dotRadius: 7)
+        XCTAssertEqual(origins[0].x, 200 + 7 + 5, accuracy: 0.5)
+        XCTAssertEqual(origins[0].y, 300 - 24 * 0.38, accuracy: 0.5)
+        XCTAssertEqual(origins[1].x, 2000 + 7 + 5, accuracy: 0.5)
+    }
+
+    // Renders a tight European cluster for visual verification of placement.
+    func test_annotate_europeCluster_writesPreview() throws {
+        let base = makeBasePNG(width: 1600, height: 800)
+        defer { try? FileManager.default.removeItem(at: base) }
+        let cities = [
+            City(name: "London", latitude: 51.51, longitude: -0.13, timezone: "Europe/London"),
+            City(name: "Paris", latitude: 48.86, longitude: 2.35, timezone: "Europe/Paris"),
+            City(name: "Amsterdam", latitude: 52.37, longitude: 4.90, timezone: "Europe/Amsterdam"),
+            City(name: "Berlin", latitude: 52.52, longitude: 13.40, timezone: "Europe/Berlin")
+        ]
+        let image = try XPlanetRunner.annotate(baseMapAt: base, cities: cities)
+        writePNG(image, to: URL(fileURLWithPath: "/tmp/ew_cluster_test.png"))
+        XCTAssertEqual(image.width, 1600)
+    }
+
     // Renders every principal phase into one strip for visual verification.
     func test_moonDisc_rendersAllPhases() {
         let ctx = makeContext(width: 880, height: 140)
